@@ -36,6 +36,8 @@ namespace HotelMind.Controllers
 
                 var chatHistory = new ChatHistory("You are a helpful hotel assistant. To find current information, you MUST use the search tools available to you.");
                 chatHistory.AddUserMessage(query);
+                // Clear previous search results to ensure fresh data for each query
+                Tools.SerperSearchTool.LatestLinks.Clear();
 
                 var result = await _aiService.ChatService.GetChatMessageContentAsync(
                     chatHistory,
@@ -50,9 +52,22 @@ namespace HotelMind.Controllers
                 else
                 {
                     ViewBag.Response = result.Content;
+                    // Debug in console
                     Console.WriteLine("\n--- AI Response ---");
                     Console.WriteLine($"{result.Content}");
                     Console.WriteLine("---------------------\n");
+
+                    var links = Tools.SerperSearchTool.LatestLinks;
+                    string finalResponse = result.Content;
+
+                    if (links != null && links.Any())
+                    {
+                        // Format the links nicely
+                        var uniqueLinks = links.Distinct().Take(5); // Remove duplicates and limit to 5
+                        finalResponse += "\n\n---\n**Sources:**\n" + string.Join("\n", uniqueLinks.Select(l => $"* {l}"));
+                    }
+
+                    ViewBag.Response = finalResponse;
                 }
             }
             catch (Exception ex)
