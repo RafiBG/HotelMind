@@ -1,0 +1,17 @@
+﻿<div class="container">
+    <div class="ai-badge"><i class="bi bi-robot"></i> AI INSIGHTS</div>
+    <h2>Comparison for: "@ViewBag.UserQuery"</h2>
+    <hr />
+
+    <div class="ai-response-container p-3 border rounded @(ViewBag.Response.Contains("❌") ? "bg-danger-subtle" : "bg-light")">
+        <div style="white-space: pre-wrap; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+            @ViewBag.Response
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Search
+        </a>
+    </div>
+</div>
