@@ -1,0 +1,155 @@
+﻿@section Styles {
+    <link rel="stylesheet" href="~/css/weather.css" asp-append-version="true" />
+}
+
+<div class="container main-dashboard">
+    <div class="ai-badge"><i class="bi bi-robot"></i> AI INSIGHTS</div>
+    <h2>Assisting with: "@ViewBag.UserQuery"</h2>
+    <hr />
+
+    <div class="dashboard-flex">
+        <div class="ai-main-response">
+            <div id="chatWindow" style="max-height: 600px; overflow-y: auto; padding-right: 10px;">
+                <div class="ai-response-container p-4 glass-card mb-3">
+                    <div style="white-space: pre-wrap;">@ViewBag.Response</div>
+                </div>
+            </div>
+
+            <div id="aiTyping" class="text-info small mb-2" style="display:none;">
+                <span class="spinner-grow spinner-grow-sm"></span> HotelMind is thinking...
+            </div>
+
+            <div class="chat-input-box glass-card p-2 d-flex gap-2">
+                <input type="text" id="chatInput" class="form-control" placeholder="Ask a follow-up..." />
+                <button onclick="sendChatMessage()" class="btn-auth-glow" style="width: auto; margin:0; padding: 0 20px;">
+                    <i class="bi bi-send"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="weatherSidebar" class="weather-column">
+            <div id="weatherWidget" class="weather-card">
+                <div class="weather-header">
+                    <span class="small-label" id="w-location">LOCATION CLIMATE</span>
+                    <img id="w-icon" src="" alt="Weather Icon">
+                </div>
+                <div id="w-temp" class="weather-temp">--°C</div>
+                <div id="w-desc" class="weather-text">Analyzing...</div>
+
+                <div id="forecastList" class="forecast-container mt-3" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+                    </div>
+
+                <div class="ai-recommendation mt-3" id="w-advice">...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const fullQuery = "@ViewBag.UserQuery";
+        console.log("DEBUG: Page loaded. Original Query:", fullQuery);
+
+        const city = extractCity(fullQuery);
+        console.log("DEBUG: Extracted City:", city);
+
+        if (city && city.length > 2) {
+            loadWeatherInsight(city);
+        } else {
+            console.warn("DEBUG: City extraction failed or too short.");
+            document.getElementById('weatherSidebar').style.display = 'none';
+        }
+    });
+
+    function extractCity(text) {
+        // Find city after 'in' or 'at'
+        const match = text.match(/(?:in|at)\s+([A-Z][a-z]+)/i);
+        if (match) return match[1];
+
+        // Fallback: Last word
+        const words = text.trim().replace(/[?.!]/g, "").split(' ');
+        return words[words.length - 1];
+    }
+
+    async function loadWeatherInsight(city) {
+        console.log("DEBUG: API Call started for:", city);
+        const widget = document.getElementById('weatherWidget');
+        const forecastContainer = document.getElementById('forecastList');
+
+        try {
+            const response = await fetch(`/api/weather/${encodeURIComponent(city)}`);
+            if(!response.ok) throw new Error(`Server returned ${response.status}`);
+
+            const data = await response.json();
+            console.log("DEBUG: Weather JSON Data:", data);
+
+            // Update UI
+            document.getElementById('w-location').innerText = `${data.location.name.toUpperCase()} FORECAST`;
+            document.getElementById('w-icon').src = "https:" + data.current.condition.icon;
+            document.getElementById('w-temp').innerText = `${Math.round(data.current.temp_c)}°C`;
+            document.getElementById('w-desc').innerText = data.current.condition.text;
+
+            // Generate 7-Day Forecast Rows
+            let forecastHtml = "";
+            data.forecast.forecastday.forEach(day => {
+                const date = new Date(day.date);
+                const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+                forecastHtml += `
+                <div class="d-flex align-items-center justify-content-between py-2 border-bottom" style="font-size: 0.85rem;">
+                    <span class="fw-bold" style="width: 40px;">${dayName}</span>
+                        <img src="https:${day.day.condition.icon}" style="width: 28px;" />
+                    <span>${Math.round(day.day.maxtemp_c)}° / <small class="opacity-50">${Math.round(day.day.mintemp_c)}°</small></span>
+                </div>`;
+            });
+            forecastContainer.innerHTML = forecastHtml;
+
+            // AI Logic
+            let advice = "Weather looks stable.";
+            if (data.current.temp_c > 30) advice = "Heatwave! Look for hotels with high AC ratings.";
+            if (data.forecast.forecastday.some(d => d.day.daily_will_it_rain)) advice = "Rain ahead. Check for hotels with indoor spas/pools.";
+
+            document.getElementById('w-advice').innerText = `AI Insight: ${advice}`;
+            widget.classList.add('show');
+            console.log("DEBUG: Weather widget shown successfully.");
+
+        } catch (e) {
+            console.error("DEBUG: Weather Load Failed:", e);
+            document.getElementById('weatherSidebar').style.display = 'none';
+        }
+    }
+
+    async function sendChatMessage() {
+        const input = document.getElementById('chatInput');
+        const msg = input.value;
+        if(!msg) return;
+
+        console.log("DEBUG: Sending message to AI:", msg);
+        const chatWindow = document.getElementById('chatWindow');
+        chatWindow.innerHTML += `<div class="text-end mb-3"><span class="badge bg-primary p-2">${msg}</span></div>`;
+        input.value = '';
+        document.getElementById('aiTyping').style.display = 'block';
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        try {
+            const response = await fetch('/Search/Chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: msg })
+            });
+            const data = await response.json();
+            console.log("DEBUG: AI Response received.");
+
+            chatWindow.innerHTML += `
+                <div class="ai-response-container p-4 glass-card mb-3">
+                    <div style="white-space: pre-wrap;">${data.response}</div>
+                </div>`;
+
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        } catch (e) {
+            console.error("DEBUG: Chat Error:", e);
+        } finally {
+            document.getElementById('aiTyping').style.display = 'none';
+        }
+    }
+</script>

@@ -1,8 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using HotelMind.Data;
 using Microsoft.AspNetCore.Identity;
+using HotelMind.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+// Loads the .env on start
+builder.Services.AddSingleton<EnvConfig>();
+// Register the AI connection
+builder.Services.AddSingleton<AIConnectionService>();
+
+builder.Services.AddHttpClient();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

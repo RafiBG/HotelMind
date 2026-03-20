@@ -1,8 +1,61 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "HotelMind AI";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="hero-section text-white p-5 mb-5 shadow" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=2070'); background-size: cover; background-position: center; border-radius: 10px;">
+    <div class="text-center py-4">
+        <h1 class="display-4 fw-bold">Find your stay, powered by AI.</h1>
+        <p class="lead mb-4">Real-time web search and price comparison, locally processed.</p>
+
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <form asp-controller="Search" asp-action="Search" method="post" class="input-group input-group-lg" id="searchForm">
+                    <input type="text" name="query" class="form-control border-0" placeholder="Where do you want to stay? (e.g. Best spa hotels in Bansko...)" required>
+                    <button class="btn btn-primary px-4" type="submit" id="searchBtn">
+                        <i class="bi bi-cpu-fill" id="btnIcon"></i> <span id="btnText">Ask AI</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div class="row text-center">
+    <div class="col-md-4">
+        <div class="p-3">
+            <div class="fs-1 mb-2">🌐</div>
+            <h3 class="h5">Live Web Search</h3>
+            <p class="note">Our Serper Tool crawls the current web for real availability.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="p-3">
+            <div class="fs-1 mb-2">🤖</div>
+            <h3 class="h5">Local Privacy</h3>
+            <p class="note">Your data stays on your machine via local Ollama processing.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="p-3">
+            <div class="fs-1 mb-2">💰</div>
+            <h3 class="h5">Price Comparison</h3>
+            <p class="note">Semantic Kernel analyzes multiple sources for the best deal.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('searchForm').onsubmit = function() {
+        var btn = document.getElementById('searchBtn');
+        var text = document.getElementById('btnText');
+        var icon = document.getElementById('btnIcon');
+
+        btn.disabled = true;
+        // In your CSS, 'start' might be green, so let's keep it blue or grey
+        btn.style.backgroundColor = "#6c757d";
+
+        text.innerText = "AI is searching & thinking...";
+        icon.classList.remove('bi-cpu-fill');
+        icon.classList.add('spinner-border', 'spinner-border-sm');
+    };
+</script>
