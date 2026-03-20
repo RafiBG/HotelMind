@@ -78,5 +78,39 @@ namespace HotelMind.Controllers
 
             return View("Results");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Chat([FromBody] ChatRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request?.Message)) return BadRequest();
+
+            try
+            {
+                // Re-using your AI logic
+                OpenAIPromptExecutionSettings settings = new()
+                {
+                    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions,
+                    Temperature = 0.5 // Slightly higher for more conversational follow-ups
+                };
+
+                // For a true "Chat", you'd ideally pass the previous history here.
+                // For now, we'll treat the follow-up as a new contextual prompt.
+                var chatHistory = new ChatHistory("You are a helpful hotel assistant. Answer the user's follow-up questions about the hotels previously discussed.");
+                chatHistory.AddUserMessage(request.Message);
+
+                var result = await _aiService.ChatService.GetChatMessageContentAsync(
+                    chatHistory,
+                    settings,
+                    _aiService.Kernel);
+
+                return Ok(new { response = result.Content });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        public class ChatRequest { public string Message { get; set; } }
     }
 }

@@ -9,6 +9,8 @@ builder.Services.AddSingleton<EnvConfig>();
 // Register the AI connection
 builder.Services.AddSingleton<AIConnectionService>();
 
+builder.Services.AddHttpClient();
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 

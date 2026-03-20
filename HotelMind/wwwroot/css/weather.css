@@ -1,0 +1,122 @@
+﻿/* Layout Fix - Updated for Side-by-Side */
+.dashboard-flex {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    flex-wrap: nowrap; /* Prevent weather from dropping below chat */
+    width: 100%;
+}
+
+.ai-main-response {
+    flex: 1; /* Takes up remaining space */
+    min-width: 0; /* Important for flexbox text-wrapping */
+}
+
+.weather-column {
+    width: 300px; /* Fixed width for the sidebar */
+    flex-shrink: 0; /* Don't let it get squished */
+}
+
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+/* Weather Card Specifics */
+.weather-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 25px;
+    width: 100%; /* Fill the 300px column */
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+}
+
+    .weather-card.show {
+        display: flex;
+        animation: slideIn 0.5s ease;
+    }
+
+.weather-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.small-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    opacity: 0.6;
+}
+
+.weather-temp {
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 10px 0;
+    /* Changed to a dark slate for better visibility on light glass */
+    color: #2d3436;
+}
+
+.weather-text {
+    font-weight: 600;
+    text-transform: capitalize;
+    /* Darker color for the "Overcast/Sunny" description */
+    color: #636e72;
+}
+
+/* Specific fix for the forecast list text */
+.forecast-container div {
+    /* This overrides the 'white' color in your JS template */
+    color: #2d3436 !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+.forecast-container small {
+    /* Makes the min temp slightly muted but still visible */
+    color: rgba(0,0,0,0.4) !important;
+}
+
+/* Improved Glass Effect for the Card */
+.weather-card {
+    background: rgba(255, 255, 255, 0.8); /* Whiter, more opaque background */
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 16px;
+    padding: 25px;
+    width: 100%;
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1); /* Softer shadow */
+}
+
+/* Mobile Responsive */
+@media (max-width: 992px) {
+    .dashboard-flex {
+        flex-direction: column;
+    }
+
+    .weather-column {
+        width: 100%;
+        order: -1; /* Put weather on top for small screens */
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
