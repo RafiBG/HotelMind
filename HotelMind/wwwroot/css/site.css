@@ -19,10 +19,6 @@ html {
 
 body {
     margin-bottom: 60px;
-    /*background-image: url('../images/dark-back.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;*/
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -35,7 +31,7 @@ body {
 }
 
 /* =========================================
-   2. HOTELMIND THEME VARIABLES
+   2. HOTELMIND THEME VARIABLES & SCROLLBAR
    ========================================= */
 :root {
     /* Softer, Eye-Friendly Dark Mode (Midnight Slate) */
@@ -46,8 +42,9 @@ body {
     --border-color: #334155;
     --input-bg: #020617;
     --input-text: #e2e8f0;
-    /* Make sure these images exist in wwwroot/images! */
     --hero-bg-image: url('../images/dark-back.jpg');
+    /* Browser-level dark mode hint */
+    color-scheme: dark;
 }
 
 body.light-mode {
@@ -60,6 +57,37 @@ body.light-mode {
     --input-bg: #ffffff;
     --input-text: #1f2937;
     --hero-bg-image: url('../images/white-back.jpg');
+    /* Browser-level light mode hint */
+    color-scheme: light;
+}
+
+/* --- CUSTOM SCROLLBAR LOGIC --- */
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 10px;
+    /* Create a padding effect using a border the same color as the background */
+    border: 2px solid var(--bg-color);
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--nav-text);
+    }
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) var(--bg-color);
 }
 
 /* Base Body Styling */
@@ -86,7 +114,7 @@ body {
     }
 
         .custom-navbar .nav-link:hover {
-            color: #0d6efd !important; /* Bootstrap primary blue */
+            color: #0d6efd !important;
         }
 
 /* Theme Toggle Button */
@@ -131,7 +159,7 @@ body {
     border-radius: 12px;
     padding: 80px 20px;
     text-align: center;
-    color: white; /* Text stays white over image */
+    color: white;
     overflow: hidden;
     transition: background-image 0.3s ease;
 }
@@ -258,7 +286,7 @@ body {
 }
 
 .auth-container .form-control {
-    background-color: var(--bg-color); /* Inset effect */
+    background-color: var(--bg-color);
     color: var(--text-color);
     border: 1px solid var(--border-color);
     padding: 12px;
@@ -285,7 +313,7 @@ body {
     font-size: 1.1rem;
     border-radius: 6px;
 }
-/* Fix for invisible placeholder text in Dark Mode */
+
 .form-control::placeholder {
     color: #9ca3af !important;
     opacity: 1 !important;
