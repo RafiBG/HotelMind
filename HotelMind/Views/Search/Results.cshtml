@@ -2,58 +2,64 @@
     <link rel="stylesheet" href="~/css/weather.css" asp-append-version="true" />
 }
 
-<div class="container main-dashboard">
-    <div class="ai-badge"><i class="bi bi-robot"></i> AI INSIGHTS</div>
-    <h2>Assisting with: "@ViewBag.UserQuery"</h2>
-    <hr />
+<div class="container main-dashboard mt-4">
+    <div class="ai-badge text-primary fw-bold mb-2"><i class="bi bi-robot"></i> AI INSIGHTS</div>
+    <h2 style="color: var(--text-color);">Assisting with: "@ViewBag.UserQuery"</h2>
+    <hr style="border-color: var(--border-color);" />
 
     <div class="dashboard-flex">
         <div class="packing-column d-flex flex-column gap-3">
-            <div id="packingWidget" class="weather-card" style="display: none; border-top: 4px solid #4da3ff;">
-                <div class="small-label mb-3"><i class="bi bi-briefcase"></i> WHAT TO PACK</div>
-                <div id="packingList" class="d-flex flex-column gap-2">
+            
+            <div id="packingWidget" class="weather-card shadow-sm p-3" style="display: none; border-top: 4px solid #4da3ff; background-color: var(--nav-bg); border-radius: 12px; border: 1px solid var(--border-color);">
+                <div class="small-label mb-3" style="color: var(--nav-text); font-weight: bold; font-size: 0.85rem;"><i class="bi bi-briefcase"></i> WHAT TO PACK</div>
+                <div id="packingList" class="d-flex flex-wrap gap-2">
                 </div>
-                <div class="mt-3" style="font-size: 0.7rem; color: #888; font-style: italic;">
+                <div class="mt-3" style="font-size: 0.75rem; color: var(--nav-text); font-style: italic;">
                     <span id="packing-context"></span>
                 </div>
             </div>
 
-            <div id="vibeWidget" class="weather-card" style="display: none; border-top: 4px solid #ff9f43; background: rgba(255, 255, 255, 0.95);">
-                <div class="small-label mb-2"><i class="bi bi-stars"></i> LOCAL VIBE</div>
-                <div id="vibe-content" style="font-size: 0.85rem; line-height: 1.4; color: #2d3436;">
+            <div id="vibeWidget" class="weather-card shadow-sm p-3" style="display: none; border-top: 4px solid #ff9f43; background-color: var(--nav-bg); border-radius: 12px; border: 1px solid var(--border-color);">
+                <div class="small-label mb-2" style="color: var(--nav-text); font-weight: bold; font-size: 0.85rem;"><i class="bi bi-stars"></i> LOCAL VIBE</div>
+                <div id="vibe-content" style="font-size: 0.9rem; line-height: 1.5; color: var(--text-color);">
                 </div>
             </div>
+            
         </div>
 
-        <div class="ai-main-response">
-            <div id="chatWindow" style="max-height: 600px; overflow-y: auto; padding-right: 10px;">
-                <div class="ai-response-container p-4 glass-card mb-3">
-                    <div style="white-space: pre-wrap;">@ViewBag.Response</div>
+        <div class="ai-main-response d-flex flex-column" style="flex: 1; min-width: 0;">
+            <div id="chatWindow" style="max-height: 600px; overflow-y: auto; padding-right: 10px; margin-bottom: 15px;">
+                <div class="ai-response-container p-4 glass-card shadow-sm" style="background-color: var(--nav-bg); border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-color);">
+                    <div style="white-space: pre-wrap; font-size: 1.05rem; line-height: 1.6;">@ViewBag.Response</div>
                 </div>
             </div>
 
-            <div id="aiTyping" class="text-info small mb-2" style="display:none;">
-                <span class="spinner-grow spinner-grow-sm"></span> HotelMind is thinking...
+            <div id="aiTyping" class="text-primary small mb-2 fw-bold" style="display:none;">
+                <span class="spinner-grow spinner-grow-sm me-1"></span> HotelMind is thinking...
             </div>
 
-            <div class="chat-input-box glass-card p-2 d-flex gap-2">
-                <input type="text" id="chatInput" class="form-control" placeholder="Ask a follow-up..." />
-                <button onclick="sendChatMessage()" class="btn-send-simple" title="Send Message">
-                    <img src="https://img.icons8.com/ios-filled/50/paper-plane.png" alt="send" />
+            <div class="chat-input-box p-2 d-flex gap-2 align-items-center shadow-sm" style="background-color: var(--nav-bg); border: 1px solid var(--border-color); border-radius: 12px;">
+                <input type="text" id="chatInput" class="form-control border-0" placeholder="Ask a follow-up..." style="background-color: var(--input-bg); color: var(--input-text); box-shadow: none;" />
+                <button onclick="sendChatMessage()" class="btn btn-primary d-flex align-items-center justify-content-center" title="Send Message" style="border-radius: 8px; width: 45px; height: 45px;">
+                    <i class="bi bi-send-fill text-white"></i>
                 </button>
             </div>
         </div>
 
         <div id="weatherSidebar" class="weather-column">
-            <div id="weatherWidget" class="weather-card">
-                <div class="weather-header">
-                    <span class="small-label" id="w-location">LOCATION CLIMATE</span>
-                    <img id="w-icon" src="" alt="">
+            <div id="weatherWidget" class="weather-card shadow-sm p-3" style="background-color: var(--nav-bg); border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-color);">
+                <div class="weather-header d-flex justify-content-between align-items-center mb-2">
+                    <span class="small-label" id="w-location" style="color: var(--nav-text); font-weight: bold; font-size: 0.85rem;">LOCATION CLIMATE</span>
+                    <img id="w-icon" src="" alt="" style="width: 50px;">
                 </div>
-                <div id="w-temp" class="weather-temp">--°C</div>
-                <div id="w-desc" class="weather-text">Analyzing...</div>
-                <div id="forecastList" class="forecast-container mt-3"></div>
-                <div class="ai-recommendation mt-3" id="w-advice">...</div>
+                <div id="w-temp" class="weather-temp fw-bold" style="font-size: 2.5rem; color: var(--text-color);">--°C</div>
+                <div id="w-desc" class="weather-text text-capitalize" style="color: var(--nav-text); font-size: 1.1rem;">Analyzing...</div>
+                
+                <div id="forecastList" class="forecast-container mt-4"></div>
+                
+                <div class="ai-recommendation mt-4 p-2 rounded" id="w-advice" style="background-color: var(--bg-color); color: var(--text-color); font-size: 0.9rem; border: 1px solid var(--border-color);">
+                    ...
+                </div>
             </div>
         </div>
     </div>
@@ -81,13 +87,13 @@
             document.getElementById('w-temp').innerText = `${Math.round(data.current.temp_c)}°C`;
             document.getElementById('w-desc').innerText = data.current.condition.text;
 
-            // 2. Forecast Display
+            // 2. Forecast Display (Updated JS styles to use CSS variables)
             let forecastHtml = "";
             data.forecast.forecastday.forEach(day => {
-                forecastHtml += `<div class="d-flex justify-content-between py-1 border-bottom" style="font-size: 0.8rem;">
-                    <span>${new Date(day.date).toLocaleDateString('en-US', {weekday:'short'})}</span>
-                    <img src="https:${day.day.condition.icon}" width="20"/>
-                    <span>${Math.round(day.day.maxtemp_c)}° / <small class="temp-min" style="color:#888;">${Math.round(day.day.mintemp_c)}°</small></span>
+                forecastHtml += `<div class="d-flex justify-content-between py-2 border-bottom" style="font-size: 0.9rem; border-color: var(--border-color) !important;">
+                    <span style="color: var(--text-color);">${new Date(day.date).toLocaleDateString('en-US', {weekday:'short'})}</span>
+                    <img src="https:${day.day.condition.icon}" width="24"/>
+                    <span style="color: var(--text-color);">${Math.round(day.day.maxtemp_c)}° / <small class="temp-min" style="color: var(--nav-text);">${Math.round(day.day.mintemp_c)}°</small></span>
                 </div>`;
             });
             document.getElementById('forecastList').innerHTML = forecastHtml;
@@ -105,13 +111,14 @@
             const low = today.mintemp_c;
             const condition = data.current.condition.text;
 
-            // 4. FETCH SMART PACKING (Uses High/Low range)
+            // 4. FETCH SMART PACKING
             fetch(`/Search/GetPackingAdvice?city=${city}&weather=${condition}&highTemp=${high}&lowTemp=${low}`)
                 .then(res => res.json())
                 .then(aiData => {
                     if (aiData.advice) {
                         const items = aiData.advice.split(',');
-                        document.getElementById('packingList').innerHTML = items.map(i => `<div class="badge-packing">${i.trim()}</div>`).join('');
+                        // Styled the packing badges to look good in dark mode
+                        document.getElementById('packingList').innerHTML = items.map(i => `<span class="badge" style="background-color: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color); padding: 8px 12px; font-weight: normal;">${i.trim()}</span>`).join('');
                         document.getElementById('packing-context').innerText = `Advice for ${Math.round(low)}°C to ${Math.round(high)}°C`;
                         document.getElementById('packingWidget').style.display = 'block';
                     }
@@ -136,7 +143,8 @@
         if(!msg) return;
 
         const chatWindow = document.getElementById('chatWindow');
-        chatWindow.innerHTML += `<div class="text-end mb-3"><span class="badge bg-primary p-2">${msg}</span></div>`;
+        // Swapped to standard Bootstrap primary badge for user messages
+        chatWindow.innerHTML += `<div class="text-end mb-3"><span class="badge bg-primary px-3 py-2 fs-6 rounded-pill shadow-sm">${msg}</span></div>`;
         input.value = '';
         document.getElementById('aiTyping').style.display = 'block';
 
@@ -147,7 +155,8 @@
                 body: JSON.stringify({ message: msg })
             });
             const data = await response.json();
-            chatWindow.innerHTML += `<div class="ai-response-container p-4 glass-card mb-3">${data.response}</div>`;
+            // Appended the AI response using the correct theme variables
+            chatWindow.innerHTML += `<div class="ai-response-container p-4 glass-card mb-3 shadow-sm" style="background-color: var(--nav-bg); border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-color); white-space: pre-wrap; font-size: 1.05rem; line-height: 1.6;">${data.response}</div>`;
             chatWindow.scrollTop = chatWindow.scrollHeight;
         } finally { document.getElementById('aiTyping').style.display = 'none'; }
     }

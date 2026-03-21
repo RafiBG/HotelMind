@@ -1,31 +1,292 @@
+/* =========================================
+   1. DEFAULT ASP.NET CORE BOILERPLATE
+   ========================================= */
 html {
-  font-size: 14px;
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    /*background-image: url('../images/dark-back.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;*/
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+    color: var(--bs-secondary-color);
+    text-align: end;
 }
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+    text-align: start;
+}
+
+/* =========================================
+   2. HOTELMIND THEME VARIABLES
+   ========================================= */
+:root {
+    /* Softer, Eye-Friendly Dark Mode (Midnight Slate) */
+    --bg-color: #0f172a;
+    --text-color: #e2e8f0;
+    --nav-bg: #1e293b;
+    --nav-text: #94a3b8;
+    --border-color: #334155;
+    --input-bg: #020617;
+    --input-text: #e2e8f0;
+    /* Make sure these images exist in wwwroot/images! */
+    --hero-bg-image: url('../images/dark-back.jpg');
+}
+
+body.light-mode {
+    /* Light Mode Overrides */
+    --bg-color: #f8f9fa;
+    --text-color: #1f2937;
+    --nav-bg: #ffffff;
+    --nav-text: #6b7280;
+    --border-color: #e5e7eb;
+    --input-bg: #ffffff;
+    --input-text: #1f2937;
+    --hero-bg-image: url('../images/white-back.jpg');
+}
+
+/* Base Body Styling */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* =========================================
+   3. NAVBAR & FOOTER
+   ========================================= */
+.custom-navbar {
+    background-color: var(--nav-bg);
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+    .custom-navbar .navbar-brand,
+    .custom-navbar .nav-link,
+    .custom-navbar .navbar-text {
+        color: var(--text-color) !important;
+        transition: color 0.3s ease;
+    }
+
+        .custom-navbar .nav-link:hover {
+            color: #0d6efd !important; /* Bootstrap primary blue */
+        }
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    outline: none;
+}
+
+/* Footer Fixes */
+.custom-footer {
+    color: var(--nav-text);
+    border-top: 1px solid var(--border-color);
+    transition: color 0.3s ease, border-color 0.3s ease;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--bg-color);
+}
+
+    .custom-footer a {
+        color: var(--nav-text);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        .custom-footer a:hover {
+            color: var(--text-color);
+            text-decoration: underline;
+        }
+
+/* =========================================
+   4. HERO SECTION & HOME PAGE
+   ========================================= */
+.hero-section {
+    position: relative;
+    background-image: var(--hero-bg-image);
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+    padding: 80px 20px;
+    text-align: center;
+    color: white; /* Text stays white over image */
+    overflow: hidden;
+    transition: background-image 0.3s ease;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+.feature-box {
+    text-align: center;
+    padding: 20px;
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.feature-title {
+    color: var(--text-color);
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.feature-desc {
+    color: var(--nav-text);
+}
+
+/* =========================================
+   5. AI SEARCH BAR
+   ========================================= */
+.search-bar-container {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+    .search-bar-container input {
+        flex: 1;
+        padding: 15px 20px;
+        border: none;
+        outline: none;
+        background-color: var(--nav-bg);
+        color: var(--text-color);
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+        .search-bar-container input::placeholder {
+            color: var(--nav-text);
+            opacity: 0.8;
+        }
+
+    .search-bar-container button {
+        padding: 0 30px;
+        background-color: #0d6efd;
+        color: white;
+        border: none;
+        font-weight: bold;
+        font-size: 1.05rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+        .search-bar-container button:hover {
+            background-color: #0b5ed7;
+        }
+
+/* =========================================
+   6. AUTH PAGES (LOGIN / REGISTER)
+   ========================================= */
+.auth-container {
+    max-width: 450px;
+    margin: 60px auto;
+    padding: 40px;
+    background-color: var(--nav-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+    .auth-header h2 {
+        color: var(--text-color);
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+.auth-container .form-label {
+    color: var(--text-color);
+    margin-top: 15px;
+    margin-bottom: 5px;
+    transition: color 0.3s ease;
+}
+
+.auth-container .form-control {
+    background-color: var(--bg-color); /* Inset effect */
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 12px;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+    .auth-container .form-control::placeholder {
+        color: var(--nav-text);
+        opacity: 0.8;
+    }
+
+    .auth-container .form-control:focus {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        outline: none;
+    }
+
+.btn-auth {
+    width: 100%;
+    padding: 12px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    border-radius: 6px;
+}
+/* Fix for invisible placeholder text in Dark Mode */
+.form-control::placeholder {
+    color: #9ca3af !important;
+    opacity: 1 !important;
 }

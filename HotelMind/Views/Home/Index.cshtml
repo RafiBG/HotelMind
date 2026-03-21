@@ -2,17 +2,17 @@
     ViewData["Title"] = "HotelMind AI";
 }
 
-<div class="hero-section text-white p-5 mb-5 shadow" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=2070'); background-size: cover; background-position: center; border-radius: 10px;">
-    <div class="text-center py-4">
-        <h1 class="display-4 fw-bold">Find your stay, powered by AI.</h1>
-        <p class="lead mb-4">Real-time web search and price comparison, locally processed.</p>
+<div class="hero-section text-white p-5 mb-5 shadow-lg" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=2070'); background-size: cover; background-position: center; border-radius: 16px;">
+    <div class="text-center py-5">
+        <h1 class="display-4 fw-bold mb-3">Find your stay, powered by AI.</h1>
+        <p class="lead mb-4 fw-light">Real-time web search and price comparison, locally processed.</p>
 
         <div class="row justify-content-center">
-            <div class="col-md-10">
-                <form asp-controller="Search" asp-action="Search" method="post" class="input-group input-group-lg" id="searchForm">
-                    <input type="text" name="query" class="form-control border-0" placeholder="Where do you want to stay? (e.g. Best spa hotels in Bansko...)" required>
-                    <button class="btn btn-primary px-4" type="submit" id="searchBtn">
-                        <i class="bi bi-cpu-fill" id="btnIcon"></i> <span id="btnText">Ask AI</span>
+            <div class="col-md-10 col-lg-8">
+                <form asp-controller="Search" asp-action="Search" method="post" class="input-group input-group-lg shadow" id="searchForm">
+                    <input type="text" name="query" class="form-control border-0" placeholder="Where do you want to stay? (e.g. Best spa hotels in Bansko...)" required style="background-color: var(--input-bg); color: var(--input-text);">
+                    <button class="btn btn-primary px-4 fw-bold" type="submit" id="searchBtn" style="border-radius: 0 8px 8px 0;">
+                        <i class="bi bi-cpu-fill me-2" id="btnIcon"></i><span id="btnText">Ask AI</span>
                     </button>
                 </form>
             </div>
@@ -20,26 +20,28 @@
     </div>
 </div>
 
-<div class="row text-center">
+<div class="row text-center g-4 mb-5">
     <div class="col-md-4">
-        <div class="p-3">
-            <div class="fs-1 mb-2">🌐</div>
-            <h3 class="h5">Live Web Search</h3>
-            <p class="note">Our Serper Tool crawls the current web for real availability.</p>
+        <div class="p-4 h-100 shadow-sm feature-card" style="background-color: var(--nav-bg); border: 1px solid var(--border-color); border-radius: 12px; transition: transform 0.2s ease, background-color 0.3s ease;">
+            <div class="fs-1 mb-3">🌐</div>
+            <h3 class="h5 fw-bold" style="color: var(--text-color);">Live Web Search</h3>
+            <p style="color: var(--nav-text); font-size: 0.95rem; margin: 0;">Our Serper Tool crawls the current web for real availability.</p>
         </div>
     </div>
+    
     <div class="col-md-4">
-        <div class="p-3">
-            <div class="fs-1 mb-2">🤖</div>
-            <h3 class="h5">Local Privacy</h3>
-            <p class="note">Your data stays on your machine via local Ollama processing.</p>
+        <div class="p-4 h-100 shadow-sm feature-card" style="background-color: var(--nav-bg); border: 1px solid var(--border-color); border-radius: 12px; transition: transform 0.2s ease, background-color 0.3s ease;">
+            <div class="fs-1 mb-3">🤖</div>
+            <h3 class="h5 fw-bold" style="color: var(--text-color);">Local Privacy</h3>
+            <p style="color: var(--nav-text); font-size: 0.95rem; margin: 0;">Your data stays on your machine via local Ollama processing.</p>
         </div>
     </div>
+    
     <div class="col-md-4">
-        <div class="p-3">
-            <div class="fs-1 mb-2">💰</div>
-            <h3 class="h5">Price Comparison</h3>
-            <p class="note">Semantic Kernel analyzes multiple sources for the best deal.</p>
+        <div class="p-4 h-100 shadow-sm feature-card" style="background-color: var(--nav-bg); border: 1px solid var(--border-color); border-radius: 12px; transition: transform 0.2s ease, background-color 0.3s ease;">
+            <div class="fs-1 mb-3">💰</div>
+            <h3 class="h5 fw-bold" style="color: var(--text-color);">Price Comparison</h3>
+            <p style="color: var(--nav-text); font-size: 0.95rem; margin: 0;">Semantic Kernel analyzes multiple sources for the best deal.</p>
         </div>
     </div>
 </div>
@@ -50,11 +52,13 @@
         var text = document.getElementById('btnText');
         var icon = document.getElementById('btnIcon');
 
+        // Disable button to prevent double-clicks
         btn.disabled = true;
-        // In your CSS, 'start' might be green, so let's keep it blue or grey
         btn.style.backgroundColor = "#6c757d";
+        btn.style.borderColor = "#6c757d";
 
-        text.innerText = "AI is searching & thinking...";
+        // Update UI to show loading state
+        text.innerText = " AI is searching & thinking...";
         icon.classList.remove('bi-cpu-fill');
         icon.classList.add('spinner-border', 'spinner-border-sm');
     };
