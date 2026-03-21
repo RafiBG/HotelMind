@@ -22,7 +22,27 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @if (User.Identity.IsAuthenticated)
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-primary" asp-area="" asp-controller="Hotels" asp-action="AIFinder">AI Search</a>
+                        </li>
+
+                        <li class="nav-item ms-auto">
+                            <span class="nav-link text-dark">Hello, @User.Identity.Name</span>
+                        </li>
+                        <li class="nav-item">
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                <button type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
+                            </form>
+                        </li>
+                        @* @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
@@ -52,7 +72,7 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
                             </li>
-                        }
+                        } *@
                     </ul>
                 </div>
             </div>

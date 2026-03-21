@@ -1,41 +1,71 @@
-﻿/* Layout Fix - Updated for Side-by-Side */
+﻿/* --- Dashboard Layout Fix (3 Columns) --- */
 .dashboard-flex {
     display: flex;
-    gap: 30px;
+    gap: 25px;
     align-items: flex-start;
-    flex-wrap: nowrap; /* Prevent weather from dropping below chat */
+    flex-wrap: nowrap;
     width: 100%;
+    margin-top: 20px;
 }
 
+/* LEFT COLUMN: Packing */
+.packing-column {
+    width: 200px;
+    flex-shrink: 0;
+}
+
+/* MIDDLE COLUMN: Chat */
 .ai-main-response {
-    flex: 1; /* Takes up remaining space */
-    min-width: 0; /* Important for flexbox text-wrapping */
+    flex: 1;
+    min-width: 0;
 }
 
+/* RIGHT COLUMN: Weather */
 .weather-column {
-    width: 300px; /* Fixed width for the sidebar */
-    flex-shrink: 0; /* Don't let it get squished */
+    width: 300px;
+    flex-shrink: 0;
 }
 
+/* --- Packing Specific Styles --- */
+#packingList {
+    flex-direction: column !important; /* Stack vertically on the left */
+}
+
+.badge-packing {
+    background: white;
+    color: #2d3436;
+    border: 1px solid rgba(0,0,0,0.1);
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: left;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;
+}
+
+    .badge-packing:hover {
+        transform: translateY(-2px);
+    }
+
+/* --- Shared Glass/Card UI --- */
 .glass-card {
-    background: var(--glass-bg);
+    background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
 }
 
-/* Weather Card Specifics */
 .weather-card {
-    background: var(--glass-bg);
+    background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 16px;
     padding: 25px;
-    width: 100%; /* Fill the 300px column */
-    display: none;
+    display: none; /* Controlled by .show in JS */
     flex-direction: column;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
 }
 
     .weather-card.show {
@@ -43,80 +73,159 @@
         animation: slideIn 0.5s ease;
     }
 
-.weather-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
+/* --- Weather Typography & Colors --- */
 .small-label {
     font-size: 0.7rem;
     font-weight: 800;
     letter-spacing: 1px;
-    opacity: 0.6;
+    color: #636e72;
+    text-transform: uppercase;
 }
 
 .weather-temp {
     font-size: 3rem;
     font-weight: 700;
     margin: 10px 0;
-    /* Changed to a dark slate for better visibility on light glass */
     color: #2d3436;
 }
 
 .weather-text {
     font-weight: 600;
     text-transform: capitalize;
-    /* Darker color for the "Overcast/Sunny" description */
     color: #636e72;
 }
 
-/* Specific fix for the forecast list text */
+/* Forecast Rows */
 .forecast-container div {
-    /* This overrides the 'white' color in your JS template */
     color: #2d3436 !important;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+    font-size: 0.95rem;
 }
 
-.forecast-container small {
-    /* Makes the min temp slightly muted but still visible */
-    color: rgba(0,0,0,0.4) !important;
+.temp-min {
+    color: #b2bec3 !important;
+    font-weight: 600;
 }
 
-/* Improved Glass Effect for the Card */
-.weather-card {
-    background: rgba(255, 255, 255, 0.8); /* Whiter, more opaque background */
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 16px;
-    padding: 25px;
-    width: 100%;
-    display: none;
-    flex-direction: column;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.1); /* Softer shadow */
+.dashboard-flex {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
 }
 
-/* Mobile Responsive */
-@media (max-width: 992px) {
-    .dashboard-flex {
-        flex-direction: column;
-    }
+.packing-column {
+    width: 200px; /* Slightly wider to fit text comfortably */
+    flex-shrink: 0;
+}
 
-    .weather-column {
+    /* Ensure the cards inside the left column stack beautifully */
+    .packing-column .weather-card {
+        display: none; /* JS will trigger .show */
         width: 100%;
-        order: -1; /* Put weather on top for small screens */
-    }
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(20px);
+        margin-bottom: 15px;
     }
 
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+        .packing-column .weather-card.show {
+            display: flex;
+        }
+
+.badge-packing {
+    background: white;
+    color: #2d3436;
+    border: 1px solid rgba(0,0,0,0.08);
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
+
+/* Local Vibe text styling */
+#vibe-content {
+    font-style: italic;
+    color: #555;
+    border-left: 2px solid #ff9f43;
+    padding-left: 10px;
+}
+
+
+
+/* Compact & Simple Send Button with Custom Image Icon */
+.btn-send-simple {
+    background: linear-gradient(135deg, #4da3ff 0%, #357abd 100%);
+    border: none;
+    border-radius: 8px;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 0;
+}
+
+    .btn-send-simple:hover {
+        filter: brightness(1.1);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    .btn-send-simple:active {
+        transform: translateY(0);
+    }
+
+    /* Styling the Icons8 Image */
+    .btn-send-simple img {
+        width: 24px;
+        height: 24px;
+        filter: brightness(0) invert(1); /* Makes the black icon white to match the button */
+    }
+
+.badge-packing {
+    background: white;
+    border-radius: 6px;
+    padding: 8px 12px;
+    border-left: 3px solid #4da3ff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    font-weight: 500;
+    /* --- Animations & Responsiveness --- */
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .dashboard-flex {
+            flex-wrap: wrap;
+        }
+
+        .packing-column {
+            order: 2;
+            width: 100%;
+        }
+
+        #packingList {
+            flex-direction: row !important; /* Items go side-by-side on tablet/mobile */
+            flex-wrap: wrap;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-flex {
+            flex-direction: column;
+        }
+
+        .weather-column, .packing-column {
+            width: 100%;
+            order: -1;
+        }
+    }
