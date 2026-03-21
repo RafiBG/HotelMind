@@ -8,6 +8,23 @@
     <hr />
 
     <div class="dashboard-flex">
+        <div class="packing-column d-flex flex-column gap-3">
+            <div id="packingWidget" class="weather-card" style="display: none; border-top: 4px solid #4da3ff;">
+                <div class="small-label mb-3"><i class="bi bi-briefcase"></i> WHAT TO PACK</div>
+                <div id="packingList" class="d-flex flex-column gap-2">
+                </div>
+                <div class="mt-3" style="font-size: 0.7rem; color: #888; font-style: italic;">
+                    <span id="packing-context"></span>
+                </div>
+            </div>
+
+            <div id="vibeWidget" class="weather-card" style="display: none; border-top: 4px solid #ff9f43; background: rgba(255, 255, 255, 0.95);">
+                <div class="small-label mb-2"><i class="bi bi-stars"></i> LOCAL VIBE</div>
+                <div id="vibe-content" style="font-size: 0.85rem; line-height: 1.4; color: #2d3436;">
+                </div>
+            </div>
+        </div>
+
         <div class="ai-main-response">
             <div id="chatWindow" style="max-height: 600px; overflow-y: auto; padding-right: 10px;">
                 <div class="ai-response-container p-4 glass-card mb-3">
@@ -21,8 +38,8 @@
 
             <div class="chat-input-box glass-card p-2 d-flex gap-2">
                 <input type="text" id="chatInput" class="form-control" placeholder="Ask a follow-up..." />
-                <button onclick="sendChatMessage()" class="btn-auth-glow" style="width: auto; margin:0; padding: 0 20px;">
-                    <i class="bi bi-send"></i>
+                <button onclick="sendChatMessage()" class="btn-send-simple" title="Send Message">
+                    <img src="https://img.icons8.com/ios-filled/50/paper-plane.png" alt="send" />
                 </button>
             </div>
         </div>
@@ -31,14 +48,11 @@
             <div id="weatherWidget" class="weather-card">
                 <div class="weather-header">
                     <span class="small-label" id="w-location">LOCATION CLIMATE</span>
-                    <img id="w-icon" src="" alt="Weather Icon">
+                    <img id="w-icon" src="" alt="">
                 </div>
                 <div id="w-temp" class="weather-temp">--°C</div>
                 <div id="w-desc" class="weather-text">Analyzing...</div>
-
-                <div id="forecastList" class="forecast-container mt-3" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
-                    </div>
-
+                <div id="forecastList" class="forecast-container mt-3"></div>
                 <div class="ai-recommendation mt-3" id="w-advice">...</div>
             </div>
         </div>
@@ -47,76 +61,73 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const fullQuery = "@ViewBag.UserQuery";
-        console.log("DEBUG: Page loaded. Original Query:", fullQuery);
-
-        const city = extractCity(fullQuery);
-        console.log("DEBUG: Extracted City:", city);
-
-        if (city && city.length > 2) {
-            loadWeatherInsight(city);
-        } else {
-            console.warn("DEBUG: City extraction failed or too short.");
-            document.getElementById('weatherSidebar').style.display = 'none';
-        }
+        const city = extractCity("@ViewBag.UserQuery");
+        if (city && city.length > 2) loadDashboardData(city);
     });
 
     function extractCity(text) {
-        // Find city after 'in' or 'at'
         const match = text.match(/(?:in|at)\s+([A-Z][a-z]+)/i);
-        if (match) return match[1];
-
-        // Fallback: Last word
-        const words = text.trim().replace(/[?.!]/g, "").split(' ');
-        return words[words.length - 1];
+        return match ? match[1] : text.trim().split(' ').pop().replace(/[?.!]/g, "");
     }
 
-    async function loadWeatherInsight(city) {
-        console.log("DEBUG: API Call started for:", city);
-        const widget = document.getElementById('weatherWidget');
-        const forecastContainer = document.getElementById('forecastList');
-
+    async function loadDashboardData(city) {
         try {
             const response = await fetch(`/api/weather/${encodeURIComponent(city)}`);
-            if(!response.ok) throw new Error(`Server returned ${response.status}`);
-
             const data = await response.json();
-            console.log("DEBUG: Weather JSON Data:", data);
 
-            // Update UI
-            document.getElementById('w-location').innerText = `${data.location.name.toUpperCase()} FORECAST`;
+            // 1. Fill Weather UI
+            document.getElementById('w-location').innerText = `${data.location.name.toUpperCase()}`;
             document.getElementById('w-icon').src = "https:" + data.current.condition.icon;
             document.getElementById('w-temp').innerText = `${Math.round(data.current.temp_c)}°C`;
             document.getElementById('w-desc').innerText = data.current.condition.text;
 
-            // Generate 7-Day Forecast Rows
+            // 2. Forecast Display
             let forecastHtml = "";
             data.forecast.forecastday.forEach(day => {
-                const date = new Date(day.date);
-                const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
-
-                forecastHtml += `
-                <div class="d-flex align-items-center justify-content-between py-2 border-bottom" style="font-size: 0.85rem;">
-                    <span class="fw-bold" style="width: 40px;">${dayName}</span>
-                        <img src="https:${day.day.condition.icon}" style="width: 28px;" />
-                    <span>${Math.round(day.day.maxtemp_c)}° / <small class="opacity-50">${Math.round(day.day.mintemp_c)}°</small></span>
+                forecastHtml += `<div class="d-flex justify-content-between py-1 border-bottom" style="font-size: 0.8rem;">
+                    <span>${new Date(day.date).toLocaleDateString('en-US', {weekday:'short'})}</span>
+                    <img src="https:${day.day.condition.icon}" width="20"/>
+                    <span>${Math.round(day.day.maxtemp_c)}° / <small class="temp-min" style="color:#888;">${Math.round(day.day.mintemp_c)}°</small></span>
                 </div>`;
             });
-            forecastContainer.innerHTML = forecastHtml;
+            document.getElementById('forecastList').innerHTML = forecastHtml;
+            document.getElementById('weatherWidget').classList.add('show');
 
-            // AI Logic
-            let advice = "Weather looks stable.";
-            if (data.current.temp_c > 30) advice = "Heatwave! Look for hotels with high AC ratings.";
-            if (data.forecast.forecastday.some(d => d.day.daily_will_it_rain)) advice = "Rain ahead. Check for hotels with indoor spas/pools.";
+            // 3. AI Weather Tip
+            let advice = "Enjoy your trip!";
+            if (data.current.temp_c > 28) advice = "Hot weather—stay hydrated.";
+            if (data.current.condition.text.includes("Rain")) advice = "Carry an umbrella.";
+            document.getElementById('w-advice').innerText = `AI Tip: ${advice}`;
 
-            document.getElementById('w-advice').innerText = `AI Insight: ${advice}`;
-            widget.classList.add('show');
-            console.log("DEBUG: Weather widget shown successfully.");
+            // --- SMART DATA CAPTURE FOR AI ---
+            const today = data.forecast.forecastday[0].day;
+            const high = today.maxtemp_c;
+            const low = today.mintemp_c;
+            const condition = data.current.condition.text;
 
-        } catch (e) {
-            console.error("DEBUG: Weather Load Failed:", e);
-            document.getElementById('weatherSidebar').style.display = 'none';
-        }
+            // 4. FETCH SMART PACKING (Uses High/Low range)
+            fetch(`/Search/GetPackingAdvice?city=${city}&weather=${condition}&highTemp=${high}&lowTemp=${low}`)
+                .then(res => res.json())
+                .then(aiData => {
+                    if (aiData.advice) {
+                        const items = aiData.advice.split(',');
+                        document.getElementById('packingList').innerHTML = items.map(i => `<div class="badge-packing">${i.trim()}</div>`).join('');
+                        document.getElementById('packing-context').innerText = `Advice for ${Math.round(low)}°C to ${Math.round(high)}°C`;
+                        document.getElementById('packingWidget').style.display = 'block';
+                    }
+                });
+
+            // 5. FETCH CITY VIBE
+            fetch(`/Search/GetCityVibe?city=${encodeURIComponent(city)}`)
+                .then(res => res.json())
+                .then(vibeData => {
+                    if (vibeData.vibe) {
+                        document.getElementById('vibe-content').innerText = vibeData.vibe;
+                        document.getElementById('vibeWidget').style.display = 'block';
+                    }
+                });
+
+        } catch (e) { console.error("Data load error", e); }
     }
 
     async function sendChatMessage() {
@@ -124,12 +135,10 @@
         const msg = input.value;
         if(!msg) return;
 
-        console.log("DEBUG: Sending message to AI:", msg);
         const chatWindow = document.getElementById('chatWindow');
         chatWindow.innerHTML += `<div class="text-end mb-3"><span class="badge bg-primary p-2">${msg}</span></div>`;
         input.value = '';
         document.getElementById('aiTyping').style.display = 'block';
-        chatWindow.scrollTop = chatWindow.scrollHeight;
 
         try {
             const response = await fetch('/Search/Chat', {
@@ -138,18 +147,8 @@
                 body: JSON.stringify({ message: msg })
             });
             const data = await response.json();
-            console.log("DEBUG: AI Response received.");
-
-            chatWindow.innerHTML += `
-                <div class="ai-response-container p-4 glass-card mb-3">
-                    <div style="white-space: pre-wrap;">${data.response}</div>
-                </div>`;
-
+            chatWindow.innerHTML += `<div class="ai-response-container p-4 glass-card mb-3">${data.response}</div>`;
             chatWindow.scrollTop = chatWindow.scrollHeight;
-        } catch (e) {
-            console.error("DEBUG: Chat Error:", e);
-        } finally {
-            document.getElementById('aiTyping').style.display = 'none';
-        }
+        } finally { document.getElementById('aiTyping').style.display = 'none'; }
     }
 </script>
