@@ -1,35 +1,48 @@
 ﻿@model HotelMind.Models.RegisterDBModel
+
 @{
     ViewData["Title"] = "Register";
 }
 
-<div class="auth-container" style="max-width: 550px;">
+<div class="auth-container shadow-sm" style="max-width: 550px;">
     <div class="auth-header">
-        <h2>Register</h2>
+        <h2>Create an Account</h2>
+        <p style="color: var(--nav-text);">Join HotelMind to unlock AI travel insights.</p>
     </div>
+
     <form asp-action="Register" method="post">
-        <div class="row">
+        <div asp-validation-summary="All" class="text-danger small mb-3"></div>
+
+        <div class="row mb-3">
             <div class="col-md-6 form-group">
-                <label asp-for="FirstName"></label>
-                <input asp-for="FirstName" class="form-control" />
+                <label asp-for="FirstName" class="form-label fw-bold"></label>
+                <input asp-for="FirstName" class="form-control" placeholder="John" />
             </div>
-            <div class="col-md-6 form-group">
-                <label asp-for="LastName"></label>
-                <input asp-for="LastName" class="form-control" />
+            <div class="col-md-6 form-group mt-3 mt-md-0">
+                <label asp-for="LastName" class="form-label fw-bold"></label>
+                <input asp-for="LastName" class="form-control" placeholder="Doe" />
             </div>
         </div>
-        <div class="form-group">
-            <label asp-for="Email"></label>
-            <input asp-for="Email" class="form-control" />
+
+        <div class="form-group mb-3">
+            <label asp-for="Email" class="form-label fw-bold"></label>
+            <input asp-for="Email" class="form-control" placeholder="name@example.com" />
         </div>
-        <div class="form-group">
-            <label asp-for="Password"></label>
-            <input asp-for="Password" class="form-control" type="password" />
+
+        <div class="form-group mb-3">
+            <label asp-for="Password" class="form-label fw-bold"></label>
+            <input asp-for="Password" class="form-control" type="password" placeholder="••••••••" />
         </div>
-        <div class="form-group">
-            <label asp-for="ConfirmPassword">Confirm Password</label>
-            <input asp-for="ConfirmPassword" class="form-control" type="password" />
+
+        <div class="form-group mb-4">
+            <label asp-for="ConfirmPassword" class="form-label fw-bold">Confirm Password</label>
+            <input asp-for="ConfirmPassword" class="form-control" type="password" placeholder="••••••••" />
         </div>
-        <button type="submit" class="btn btn-success btn-auth mt-3">Create Account</button>
+
+        <button type="submit" class="btn btn-success btn-auth w-100">Create Account</button>
+
+        <div class="text-center mt-4" style="color: var(--nav-text); font-size: 0.9rem;">
+            Already have an account? <a asp-controller="Account" asp-action="Login" class="text-success text-decoration-none fw-bold">Login</a>
+        </div>
     </form>
 </div>
